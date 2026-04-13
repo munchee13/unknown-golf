@@ -1,0 +1,6566 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Unknown Golf",
+    "description": "# Overview\nAPI to access information on your communities (or clubs) on the Unknown Golf platform.\n\n## Getting Started\nOnce you have set up your community in Unknown Golf, send an email to Support@UnknownGolf.com with a description of how you intend to utilize the Unknown Golf API.\n\nWe will review and may shedule a meeting to discuss further before providing your credentials.\n\n## Request API Enhancements\nSend an email to Support@UnknownGolf.com with as much detail as you can provide, after our technical team has had an opportunity to review we will reach back out with an update.\n",
+    "contact": {
+      "name": "API Support",
+      "email": "support@unknowngolf.com"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://www.unknowngolf.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.unknowngolf.com",
+      "description": "Production"
+    },
+    {
+      "url": "https://api-test.unknowngolf.com",
+      "description": "Testing"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Operations related to access and security for the Unknown Golf API\n\n**Expiration:**\nSecurity token expires after 24 hours\n"
+    },
+    {
+      "name": "Community",
+      "description": "Operations for Communities\n\n**What is a Community?**\nA community in Unknown Golf is an entity that will group together all of your players and events.\n\n**What is a Club?**\nA club is also a community, the main difference is that a club has sub communities and a club dashboard that provides insight into all of the Club's players and events.\n"
+    },
+    {
+      "name": "Event",
+      "description": "Operations related to the Events in your community (or Club)\n\n**Event Types:**\nA tournament refers to a Multi-Round Event that has rounds (events) associated with it.  These events have their event ids prefixed with the letter \"M\", a single round event or a round of a multi-round will have their event ids prefixed with the letter \"S\".\n\n**Creating an Event:**\nEvents can only be created on UnknownGolf.com, they currently cannot be created through the Unknwon Golf API.\n"
+    },
+    {
+      "name": "Event Courses",
+      "description": "Operations related to the Courses for your Events\n\n**Search Courses:**\nOnly courses associated with an event in Unknown Golf can be accessed via the API\n\n**Add Courses:**\nCourses cannot be added to an Event through the API, only on UnknownGolf.com\n"
+    },
+    {
+      "name": "Event Flights",
+      "description": "\tOperations related to the Flights for an event.\n\n\tEach leaderboard has its own set of flights which can be used for the following:\n\n\t1.  Segment your leaderboards into groups by Handicap, Age, Course, etc....\n\t2.  Determine if players or teams are participating in a Leaderboard.  If a leaderboard has flights defined, a player or team is not assigned to a flight, then they are not participating in that leaderboard and will not show up in the standings or results for that leaderboard.\n\n\t** Are Flights Required?**\n\tSingle round events contain a setting to enable or disable flights, currently ALL multi-round events require flights, although this option is targeted to be added in the future.\n\n\t**Players:**\n\tPlayers must be signed up for the event to be assigned to a flight.\n"
+    },
+    {
+      "name": "Event Handicap (Player)",
+      "description": "Operations related to Player Handicaps for an Event\n\n**Multi-Round Handicaps:**\nFor multi-round events, the player's will have handicaps set at the overall event level and then for each round which will override the event level for that round.\n\n**Course vs. Playing Handicap:**\nThe \"Course Handicap\" is the players calculated handicap for the assigned tee box (Slope, Rating, and Par).\n\nThe \"Playing Handicap\" is the player's course handicap and then applying allocations, an example allocation could be 80% of a player's handicap where their Course handicap is a 10 and their playing handicap is an 8.\n\n**Applying Allocations:**\nAllocations are applied to the unrounded course handicap wich may result is 2 players having the same course handicap but slightly different playing handicaps.\n\n**Handicap Number of Holes:**\nAll handicaps consumed and calculated are for 18 holes, regardless of the number of holes that are being played.  If you are manually setting a handicap for an event that is playing less then 18 holes, ensure you are setting an 18 hole equilivant handicap for the player.\n\n"
+    },
+    {
+      "name": "Event Handicap (Team)",
+      "description": "Operations related to Team Handicaps for an Event\n\n**Multi-Round Events:**\nWhen setting a team handicap for a multi-round event, the handicap should be set for each round of the event, there is no option to set a team handicap for the entire event.\n\n**Course vs. Playing Handicap:**\nThe \"Course Handicap\" is the team's calculated handicap for their players.\n\nThe \"Playing Handicap\" is the team's course handicap and then applying allocations, an example allocation could be 50% of a team's total handicap, where their Course handicap is a 10 and their playing handicap is an 5.\n\n**Applying Allocations:**\nAllocations are applied to the unrounded course handicap which may result is 2 teams having the same course handicap but slightly different playing handicaps.\n\n**Handicap Number of Holes:**\nAll handicaps consumed and calculated are for 18 holes, regardless of the number of holes that are being played.  If you are manually setting a handicap for an event that is playing less than 18 holes, ensure you are setting an 18 hole equivalent handicap for the team.\n\n"
+    },
+    {
+      "name": "Event Leaderboards",
+      "description": "Operations related to the Leaderboards for an event.\n\n A Leaderboard defines the format of play and payouts, and contains multiple different configurations per leaderboard type.\n\n**Multi-Round Events:**\nFor multi-round events, the set of leaderboards are created for each round of the event, in addition to the overall set of leaderboards.\n\nLeaderboards set at the \"round level\" will define the format and payouts for just that round, where the leaderboards set at the \"event level\" will define the format and payouts for the entire event, inclusive of all rounds unless configured for a subset of rounds.\n\n**Add / Edit Leaderboard Configurations:**\nAdd and editing of leaderboards can only be done on UnknownGolf.com\n\n**List of Leaderboard types:**\nReference the Utility opertation \"/util/leaderboards/types\" for a full list of leaderboard types, additional information on the leaderboard types can be found in Unknown Golf's help documentation (help.UnknownGolf.com).\n"
+    },
+    {
+      "name": "Event Players",
+      "description": "Operations related to Players registering to participate in an Event\n\n**Player Types:**\nPlayers registered for your Event can be registed by their Profile, or by their name and Gender.\n\n**Multi-Round Event vs. Single Round:**\nFor multi-round events, players are registered for the Multi-round, they are not registered individually for each round.\n\n**Note:**\nPlayers registered by name will not have any communication method associated with them, and will not be able to be included in any reports other then this event.\n"
+    },
+    {
+      "name": "Event Scores (Player)",
+      "description": "Operations related to the Players Scores for an event.\n"
+    },
+    {
+      "name": "Event Scores (Team)",
+      "description": "Operations related to the Team Scores for an event.\n\n**Note:**\nThis is for Team Scores where the format of play is to enter a single score per hole for a team, this is not for events where individual player scores are entered and then combined to create a team score.\n"
+    },
+    {
+      "name": "Event Teams",
+      "description": "Operations related to the Teams for your Events\n\n**Players:**\nPlayers must be signed up for the event to be assigned to a team.\n\n**Note:**\nIf an event is a multi-round, there can be teams for the overall event and also a different set of teams for each round\n"
+    },
+    {
+      "name": "Event Tee Pairings",
+      "description": "Operations related to the Tee Pairings for an event.\n\n**Players:**\nPlayers must be signed up for the event to be assigned to a tee pairing.\n\n**Course:**\nTee pairings are unique by golf course\n\n**Tee Group:**\nThe tee group is used to define the order of tee groups starting on the same hole at the same time.  An examle is having an \"A\" and \"B\" group both starting on hole 1 at 8:00 AM.  The \"A\" group would tee off first followed by the \"B\" group.\n"
+    },
+    {
+      "name": "Event Web Links",
+      "description": "Operations to retrieve web links for your Events\n\n**Note:**\nSome weblinks can be created specificially for a player and should only be shared with that player, while others are generic and can be shared with anyone.\n"
+    },
+    {
+      "name": "Player",
+      "description": "Operations related to the Players in your community (or Club)\n\n**Security:**\nYou only have access to players that are in your community(s).\n\n**Player Updates:**\nOnce a player completes their profile on UnknownGolf.com, there are personal attributes that you cannot update, only the player themselves can make the updates on UnknownGolf.com\n\n**Duplicate Profiles & Merging Accounts:**\nA unique profile is determined by a Unique Email Address or Unique World Handicap Id, if you receive an error message when adding (or updating) a player you will need to reach out to Support@UnknownGolf.com to have the profiles merged.\n"
+    },
+    {
+      "name": "Utility",
+      "description": "Utility Operations"
+    }
+  ],
+  "paths": {
+    "/v1/application.wadl/{path}": {
+      "get": {
+        "operationId": "getExternalGrammar",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/xml": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/application.wadl": {
+      "get": {
+        "operationId": "getWadl",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/vnd.sun.wadl+xml": {
+              },
+              "application/xml": {
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login",
+        "description": "Retrieve Security Token to access Unknown Golf APIs",
+        "operationId": "auth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Credentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessToken"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "token": "eyJhbGc4NCJ9.eyJzdWIiOiJ1cC5hcGlAdW5rbm93bmdvbGYyOSwieHAiOjQyMTEyMTQxMDgxfQ.eRDA6Ubn9OgY_5M4u8ENSrPFP5X9X4ZcuM"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credentials"
+          }
+        }
+      }
+    },
+    "/v1/community/search": {
+      "get": {
+        "tags": [
+          "Community"
+        ],
+        "summary": "Search communities",
+        "description": "List of communities, if no search criteria is provided then all communities will be returned",
+        "operationId": "search",
+        "requestBody": {
+          "description": "Community search criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunitySearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Community"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 37,
+                        "name": "Unknown MGA",
+                        "clubCommunityId": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/rounds": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "summary": "List all rounds",
+        "description": "List of rounds for a multi-round event",
+        "operationId": "rounds",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiEvent"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "communityId": 37,
+                        "communityName": "Unknown MGA",
+                        "eventId": "S-65222",
+                        "name": "Day 1",
+                        "courseId": 1,
+                        "courseName": "Lantana Golf Club",
+                        "startDate": "2025-09-13",
+                        "endDate": "2025-09-13",
+                        "info": "Stroke play event where strokes are subtracted or added to your gross scores depending on the course handicap."
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "summary": "Search events",
+        "description": "Search the events within a community",
+        "operationId": "search_1",
+        "requestBody": {
+          "description": "Event search criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiEventSearch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiEvent"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/courses": {
+      "get": {
+        "tags": [
+          "Event Courses"
+        ],
+        "summary": "List all courses",
+        "description": "List of courses for the Event\n",
+        "operationId": "list",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiCourse"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "courseId": 1,
+                        "name": "Lantana Golf Club",
+                        "city": "Argyle",
+                        "state": "US-TX",
+                        "country": "US"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/courses/{courseId}/tees": {
+      "get": {
+        "tags": [
+          "Event Courses"
+        ],
+        "summary": "List all course tees",
+        "description": "List of Course Tees for an Event\n",
+        "operationId": "tees",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Course Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 55284
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiCourseTee"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "id": 65,
+                      "gender": "M",
+                      "name": "Black",
+                      "par": 72,
+                      "parFront": 36,
+                      "parBack": 36,
+                      "rating": 73.9,
+                      "ratingFront": 37.1,
+                      "ratingBack": 36.8,
+                      "slope": 133,
+                      "slopeFront": 132,
+                      "slopeBack": 133,
+                      "holes": [
+                        {
+                          "hole": 1,
+                          "par": 4,
+                          "hc": 13,
+                          "lengthYards": 389
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/courses/{courseId}/tees/{teeId}": {
+      "get": {
+        "tags": [
+          "Event Courses"
+        ],
+        "summary": "Retrieve course tee",
+        "description": "Course Tee for an Event\n",
+        "operationId": "tees_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Course Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 55284
+          },
+          {
+            "name": "teeId",
+            "in": "path",
+            "description": "Tee Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 11587
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiCourseTee"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "id": 65,
+                      "gender": "M",
+                      "name": "Black",
+                      "par": 72,
+                      "parFront": 36,
+                      "parBack": 36,
+                      "rating": 73.9,
+                      "ratingFront": 37.1,
+                      "ratingBack": 36.8,
+                      "slope": 133,
+                      "slopeFront": 132,
+                      "slopeBack": 133,
+                      "holes": [
+                        {
+                          "hole": 1,
+                          "par": 4,
+                          "hc": 13,
+                          "lengthYards": 389
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/{flightId}/players/{playerId}": {
+      "post": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Assign player",
+        "description": "\t\t\tAssign the player to the Flight for the Leaderboard.\n\n\t\t\t**Note:**\n\t\t\tIf this is a team leaderboard use the \"Assign team\" endpoint.\n",
+        "operationId": "assignPlayer",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "flightId",
+            "in": "path",
+            "description": "Flight Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 68751
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Remove player",
+        "description": "\t\t\tRemove the player from the Flight for the Leaderboard.\n\n\t\t\t**Note:**\n\t\t\tIf this is a team leaderboard use the \"Remove team\" endpoint.\n",
+        "operationId": "removePlayer",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "flightId",
+            "in": "path",
+            "description": "Flight Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 68751
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/{flightId}/teams/{teamId}": {
+      "post": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Assign team",
+        "description": "\t\t\tAssign the team to the Flight for the Leaderboard.\n",
+        "operationId": "assignTeam",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "flightId",
+            "in": "path",
+            "description": "Flight Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 68751
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Remove team",
+        "description": "\t\t\tRemove the team from the Flight for the Leaderboard.\n",
+        "operationId": "removeTeam",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "flightId",
+            "in": "path",
+            "description": "Flight Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 68751
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/{flightId}": {
+      "delete": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Delete flight",
+        "description": "\t\t\tDelete the Flight\n",
+        "operationId": "deleteFlight",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "flightId",
+            "in": "path",
+            "description": "Flight Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 68751
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights": {
+      "get": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "List all flights",
+        "description": "List of flights for the Event\n",
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiFlight"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 128178,
+                        "leaderboardId": 304187,
+                        "name": "Flight #1"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "Delete all flights",
+        "description": "\t\t\tDelete the Flights for the Event or for a specific leaderboard if the leaderboardId is included.\n",
+        "operationId": "deleteFlightAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "leaderboardId",
+            "in": "query",
+            "description": "Leaderboard Id (All leaderboards if not included)",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 562
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/leaderboards/{leaderboardId}": {
+      "get": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "List flights for leaderboard",
+        "description": "List of flights for a leaderboard of an Event including the Teams (if a Team Leaderboard) or Players (if a NOT a team Leaderboard)\n",
+        "operationId": "listLeaderboard",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "Leaderboard Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 5112
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiFlight"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 128178,
+                        "leaderboardId": 304187,
+                        "name": "Flight #1",
+                        "teams": [
+                          {
+                            "teamId": 266515,
+                            "name": "Team #1",
+                            "players": [
+                              {
+                                "playerId": 1,
+                                "firstName": "Bill",
+                                "lastName": "Trabosh",
+                                "suffix": "III",
+                                "handle": "Founder"
+                              },
+                              {
+                                "playerId": 32490,
+                                "firstName": "Ben",
+                                "lastName": "Stevens"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/leaderboards/{leaderboardId}/unassigned/players": {
+      "get": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "List players unassigned",
+        "description": "List of players that are unassigned to a flight for this leaderboard.\n",
+        "operationId": "listUnassignedPlayers",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "Leaderboard Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 5112
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiFlight"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "playerId": 159282,
+                        "firstName": "first",
+                        "lastName": "last",
+                        "suffix": "Jr.",
+                        "handle": "King #20"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/flights/leaderboards/{leaderboardId}/unassigned/teams": {
+      "get": {
+        "tags": [
+          "Event Flights"
+        ],
+        "summary": "List teams unassigned",
+        "description": "List of teams that are unassigned to a flight for this leaderboard.\n",
+        "operationId": "listUnassignedTeams",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "Leaderboard Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 5112
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiFlight"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "teamId": 266515,
+                        "name": "Team #1",
+                        "players": [
+                          {
+                            "playerId": 1,
+                            "firstName": "Bill",
+                            "lastName": "Trabosh",
+                            "suffix": "III",
+                            "handle": "Founder"
+                          },
+                          {
+                            "playerId": 32490,
+                            "firstName": "Ben",
+                            "lastName": "Stevens"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/handicaps": {
+      "get": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Search handicaps",
+        "description": "List of players and their handicaps for the event\n",
+        "operationId": "search_2",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Search Criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiHcSearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiPlayerHc"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "playerId": 1,
+                        "courseId": 1,
+                        "courseName": "Lantana Golf Club",
+                        "teeId": 89658,
+                        "teeName": "Blue",
+                        "teeRating": 71.2,
+                        "teeSlope": 128,
+                        "teePar": 72,
+                        "hcRevisionDt": "2025-08-04",
+                        "hcIndex": 12.7,
+                        "hcCourse": 14,
+                        "hcPlaying": 14,
+                        "hcAllocPct": 100
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/{playerId}/handicap/coursePlaying": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Update handicap",
+        "description": "Set the player's Course and Playing handicap for an Event.\n",
+        "operationId": "updateByCoursePlaying",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          }
+        ],
+        "requestBody": {
+          "description": "Player Handicap Course and Playing",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUpdateHcCoursePlaying"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/{playerId}/handicap/index": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Update handicap index",
+        "description": "Set the player's Course and Playing handicap for an Event by Handicap Index.\n",
+        "operationId": "updateByIndex",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          }
+        ],
+        "requestBody": {
+          "description": "Player Handicap Index",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUpdateHcIndex"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/{playerId}/handicap/lock": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Update locked",
+        "description": "Set the player's handicap as locked or unlocked for the event\n",
+        "operationId": "updateLocked",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          },
+          {
+            "name": "lock",
+            "in": "query",
+            "description": "Flag to Lock (true) and unlock (false)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/handicaps/lock": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Update lock all",
+        "description": "Set all player's handicaps as locked or unlocked for the event\n",
+        "operationId": "updateLockedAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          },
+          {
+            "name": "lock",
+            "in": "query",
+            "description": "Flag to Lock (true) and unlock (false)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/{playerId}/handicap/tee/{teeId}": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Player)"
+        ],
+        "summary": "Update Assigned tee",
+        "description": "Set the player's assigned tee box\n",
+        "operationId": "updateTee",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          },
+          {
+            "name": "teeId",
+            "in": "path",
+            "description": "Tee Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 11576
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/handicaps": {
+      "get": {
+        "tags": [
+          "Event Handicap (Team)"
+        ],
+        "summary": "Search handicaps",
+        "description": "List of teams and their handicaps for the event\n",
+        "operationId": "search_3",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Search Criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiHcSearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTeamHc"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}/handicap": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Team)"
+        ],
+        "summary": "Update handicap",
+        "description": "Set the team's handicap index, course, and playing for the event\n",
+        "operationId": "updateByCoursePlaying_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          }
+        ],
+        "requestBody": {
+          "description": "Handicap Index, Course, and Playing",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUpdateHc"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}/handicap/lock": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Team)"
+        ],
+        "summary": "Update locked",
+        "description": "Set the team's handicap as locked or unlocked for the event\n",
+        "operationId": "updateLocked_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 524
+          },
+          {
+            "name": "lock",
+            "in": "query",
+            "description": "Flag to Lock (true) and unlock (false)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/handicaps/lock": {
+      "patch": {
+        "tags": [
+          "Event Handicap (Team)"
+        ],
+        "summary": "Update lock all",
+        "description": "Set all team's handicaps as locked or unlocked for the event\n",
+        "operationId": "updateLockedAll_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "lock",
+            "in": "query",
+            "description": "Flag to Lock (true) and unlock (false)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/leaderboards": {
+      "get": {
+        "tags": [
+          "Event Leaderboards"
+        ],
+        "summary": "List all leaderboards",
+        "description": "List of leaderboards for the Event\n",
+        "operationId": "list_2",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiLeaderboard"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 304185,
+                        "name": "Player (Gross)",
+                        "typeId": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players": {
+      "get": {
+        "tags": [
+          "Event Players"
+        ],
+        "summary": "List all players",
+        "description": "List of players signed up for the event\n",
+        "operationId": "search_4",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiPlayer"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "registeredDt": "2025-08-13T15:56:00.404203-05:00",
+                        "playerId": 1,
+                        "hasProfile": true,
+                        "member": true,
+                        "firstName": "Bill",
+                        "lastName": "Trabosh",
+                        "suffix": "III",
+                        "gender": "M",
+                        "handle": "Founder",
+                        "picUrl": "https://static.unknowngolf.com/players/1/profile/1858.jpg",
+                        "hcProviderId": 3,
+                        "hcId": "8500474"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Event Players"
+        ],
+        "summary": "Register player",
+        "description": "Add Player to the Event\n\n**By Profile:**\nIf the *playerId* is included in the request, then the player registered for the event will be associated with that player in your community roster.\n\n**By Name:**\nIf the *playerId* is not included in the request, then a new player will be registered for the event that is **NOT** associated with your community.\n\n",
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Player to register for the event",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiPlayerSignUp"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiPlayerId"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": "{playerId: 1}"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/{playerId}": {
+      "delete": {
+        "tags": [
+          "Event Players"
+        ],
+        "summary": "Remove player",
+        "description": "Cancel the player from participating in the Event\n\n**Flights and Teams**\nWhen removing a player from an event, the player will be removed from any Flights or Teams they are assigned to.\n\n**Note:**\nIf the player has a score entered for the Event, the score must first be removed before the player can be removed from the event.\n\n",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 5864
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/players/scores": {
+      "get": {
+        "tags": [
+          "Event Scores (Player)"
+        ],
+        "summary": "Search scores",
+        "description": "List of scores for the event\n",
+        "operationId": "search_5",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Search Criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiScoreSearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiScore"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 893083,
+                        "playerId": 159267,
+                        "firstName": "Test",
+                        "lastName": "HC",
+                        "gender": "M",
+                        "eventId": "S-65210",
+                        "playedDate": "2025-09-29",
+                        "numHoles": 18,
+                        "startHole": 1,
+                        "courseId": 1,
+                        "courseName": "Lantana Golf Club (Argyle, US-TX)",
+                        "teeId": 67,
+                        "teeName": "Blue",
+                        "teeRating": 71.2,
+                        "teeSlope": 128,
+                        "teePar": 72,
+                        "hcIndex": 5,
+                        "hcCourse": 5,
+                        "hcPlaying": 5,
+                        "gross": 75,
+                        "grossVsPar": 3,
+                        "ags": 75,
+                        "agsVsPar": 3,
+                        "net": 70,
+                        "netVsPar": -2,
+                        "isTest": true,
+                        "postedToWHS": false,
+                        "unofficial": false,
+                        "holeScores": [
+                          {
+                            "hole": 1,
+                            "par": 4,
+                            "gross": 4,
+                            "ags": 4,
+                            "netCourse": 4,
+                            "netPlaying": 4
+                          },
+                          {
+                            "hole": 2,
+                            "par": 4,
+                            "gross": 4,
+                            "ags": 4,
+                            "netCourse": 4,
+                            "netPlaying": 4
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/scores": {
+      "get": {
+        "tags": [
+          "Event Scores (Team)"
+        ],
+        "summary": "Search scores",
+        "description": "List of team scores for the event\n",
+        "operationId": "search_6",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Search Criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiScoreSearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiScore"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 68748,
+                        "teamId": 266543,
+                        "name": "Team #4",
+                        "eventId": "S-65225",
+                        "startHole": 1,
+                        "courseId": 1,
+                        "courseName": "Lantana Golf Club",
+                        "hcIndex": 4.4,
+                        "hcCourse": 4,
+                        "hcPlaying": 4,
+                        "gross": 69,
+                        "grossVsPar": -3,
+                        "net": 65,
+                        "netVsPar": -7,
+                        "isTest": true,
+                        "unofficial": false,
+                        "players": [
+                          {
+                            "playerId": 159298,
+                            "firstName": "Hutch",
+                            "lastName": "Romanos",
+                            "gender": "M"
+                          },
+                          {
+                            "playerId": 159271,
+                            "firstName": "Mark",
+                            "lastName": "Fajt",
+                            "gender": "M"
+                          }
+                        ],
+                        "holeScores": [
+                          {
+                            "hole": 1,
+                            "gross": 5,
+                            "netCourse": 5,
+                            "netPlaying": 5
+                          },
+                          {
+                            "hole": 2,
+                            "gross": 3,
+                            "netCourse": 3,
+                            "netPlaying": 3
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams": {
+      "get": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "List all teams",
+        "description": "List of teams for the event\n",
+        "operationId": "list_3",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTeam"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "teamId": 266515,
+                        "name": "Team #1",
+                        "players": [
+                          {
+                            "playerId": 32490,
+                            "firstName": "Ben",
+                            "lastName": "Stevens"
+                          },
+                          {
+                            "playerId": 159301,
+                            "firstName": "Frank",
+                            "lastName": "Schneider"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Add team",
+        "description": "\t\t\tCreate the teams\n\n\t\t\t**Team Name:**\n\t\t\tNot rquired, will default to \"Team #X\" with \"X\" being the total number of teams.\n\n\t\t\t**Player Assign:**\n\t\t\tIf player ids are included in the request for each team, then those players will be assigned to the team when the team is created.\n",
+        "operationId": "add",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Teams to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApiTeamAdd"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Delete all teams",
+        "description": "\t\t\tDelete all teams for the event\n",
+        "operationId": "deleteAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}/players/{playerId}": {
+      "post": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Assign player",
+        "description": "\t\t\tAssign the player to the team\n",
+        "operationId": "assignPlayer_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Remove player",
+        "description": "\t\t\tRemove the player from the team\n",
+        "operationId": "removePlayer_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/players": {
+      "post": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Assign players",
+        "description": "\t\t\tAssign the players to the teams\n",
+        "operationId": "assignPlayers",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Teams players to assign",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApiTeamPlayerAdd"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Remove all players all teams",
+        "description": "\t\t\tRemove all players from all teams\n",
+        "operationId": "removeAllPlayers",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}": {
+      "delete": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Delete team",
+        "description": "\t\t\tDelete the team\n",
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}/players": {
+      "delete": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Remove players all",
+        "description": "\t\t\tRemove all players from the team\n",
+        "operationId": "removePlayersAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teams/{teamId}/name/{name}": {
+      "patch": {
+        "tags": [
+          "Event Teams"
+        ],
+        "summary": "Update name",
+        "description": "\t\t\tUpdate the Team Name\n",
+        "operationId": "updateName",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "New Team Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Twin Towers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teePairings": {
+      "get": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "List tee pairings",
+        "description": "List of Tee Pairings for a single round event, or a round of a multi-round event.\n",
+        "operationId": "list_4",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "S-45876"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTee"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 295051,
+                        "courseId": 1,
+                        "time": "08:00:00",
+                        "hole": 1,
+                        "group": "B",
+                        "players": [
+                          {
+                            "playerId": 159323,
+                            "firstName": "Sam",
+                            "lastName": "Meade"
+                          },
+                          {
+                            "playerId": 41739,
+                            "firstName": "Robert",
+                            "lastName": "Rinker"
+                          },
+                          {
+                            "playerId": 159267,
+                            "firstName": "Dean",
+                            "lastName": "Sifuentes"
+                          },
+                          {
+                            "playerId": 159318,
+                            "firstName": "John",
+                            "lastName": "Shea"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Update tee pairings",
+        "description": "Update the tee pairings\n\n**Note:**\nTo remove players use the Add or Remove players endpoint.\n",
+        "operationId": "updateTeeTime",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "S-45876"
+          }
+        ],
+        "requestBody": {
+          "description": "Tee pairings to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApiTeeUpdate"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTeeUpdateReturn"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "teePairingId": 295083
+                      },
+                      {
+                        "errors": [
+                          "Tee pairing id is required"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Create tee pairings",
+        "description": "Create the tee pairings, if player ids are included, assign the players to the tee pairing.\n\n**Note:**\nCreating a new tee pairing with the same the same time, hole, group, and course id as an existing tee pairing will NOT update the existing tee pairing, a new tee pairing will be created.\n",
+        "operationId": "addTeeTime",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "S-45876"
+          }
+        ],
+        "requestBody": {
+          "description": "Tee pairings to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApiTeeCreate"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTeeCreateReturn"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "teePairingId": 295083
+                      },
+                      {
+                        "teePairingId": 295084,
+                        "errors": [
+                          "Player id 445 is not signed up for the event"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Delete all tee pairings",
+        "description": "\t\t\tDelete all tee pairing, any players assigned to the tee pairing will be unassigned.\n",
+        "operationId": "deleteTeeTimesAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "courseId",
+            "in": "query",
+            "description": "Course Id (All courses if not included)",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 562
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teePairings/{teePairingId}/players/{playerId}": {
+      "post": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Assign player",
+        "description": "\t\t\tAssign the player to the tee pairing\n",
+        "operationId": "assignPlayer_2",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teePairingId",
+            "in": "path",
+            "description": "Tee pairing Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Remove player",
+        "description": "\t\t\tRemove the player to the tee pairing\n",
+        "operationId": "removePlayer_2",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teePairingId",
+            "in": "path",
+            "description": "Tee pairing Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 547
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teePairings/players": {
+      "post": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Assign players",
+        "description": "\t\t\tAssign the players to the tee pairing\n",
+        "operationId": "assignPlayersAll",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "requestBody": {
+          "description": "Players with the tee pairing assignment",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiTeeAssignPlayer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Remove all players",
+        "description": "\t\t\tRemove all the players assigned to a tee pairing\n\n\t\t\t**By Course:\"**\n\t\t\tIf a course id is included in as a parameter, only players assigned to tee pairings on that course will be removed.\n",
+        "operationId": "removePlayersAll_1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "courseId",
+            "in": "query",
+            "description": "Course Id (All courses if not included)",
+            "schema": {
+              "type": "string"
+            },
+            "example": 562
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teePairings/{teePairingId}": {
+      "delete": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "Delete tee pairing",
+        "description": "\t\t\tDelete the tee pairing, any players assigned to the tee pairing will be unassigned.\n",
+        "operationId": "deleteTeeTime",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "teePairingId",
+            "in": "path",
+            "description": "Tee pairing Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 6827
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/teePairings/allRounds": {
+      "get": {
+        "tags": [
+          "Event Tee Pairings"
+        ],
+        "summary": "List tee pairings all rounds",
+        "description": "List of Tee Pairings for all rounds of a multi-round event.\n",
+        "operationId": "listAllRounds",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiTee"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/flights": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Flights list",
+        "description": "Web link to the list of flights for the event.\n\nThe link can be shared with anyone and does not require the player to be logged in.  The display is the same as the event flights list print, and the display can be configured in the event print center.\n",
+        "operationId": "linkFlightList",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/players": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Players list",
+        "description": "Web link to the list of players registered for the event.\n\nThe link can be shared with anyone and does not require the player to be logged in.  The display is the same as the event player list print, and the display can be configured in the event print center.\n",
+        "operationId": "linkPlayersList",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/players/{playerId}/scoring": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Player enter scores",
+        "description": "Web link for the player included in the request to enter scores for the event.\n\n**Note:**\nThis link is specific to the player included in the request and can only be used to score by this player.\n\n**Community Admin Restriction:**\nIf the player is an admin of the community for this event, then the player will not be able to use the link to score and will need to log in normally.\n",
+        "operationId": "linkPlayersScore",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 2469
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/players/scoring": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Player (any) enter scores",
+        "description": "Web link for any player to enter scores for the event, after the link is use the player will be asked to select the player they are scoring as.  The live scorecard will then default to score for all players in that playe's assigned tee pairing.\n\n**Community Admin Restriction:**\nPlayer's that are admin of the communiyt will not be available to be selected as the scorer, they will need to log in normally to score.\n",
+        "operationId": "linkPlayersScoreAny",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/players/{playerId}/register": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Player registration",
+        "description": "Web link for the player included in the request to register for the event.\n\n**Note:**\nThis link is specific to the player included in the request and can only be used to register this player.\n",
+        "operationId": "linkPlayersSignUp",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 2469
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/players/public/register": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Player public registration",
+        "description": "Web link for a public player (not part of your community) to register for the event.\n\n**Registration Type:**\nThis link can only be used if the event registration type is set to \"Online Questionnaire\".\n\n**Note:**\nPlayer's that are part of your community can still uset this link, they will just be asked to enter all of their information.\n",
+        "operationId": "linkPlayersSignUpPublic",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 2469
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/results": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Results list",
+        "description": "Web link to the results for the event.\n\nThe link can be shared with anyone and does not require the player to be logged in.  The display is the same as the event results print, and the display can be configured in the event print center.\n",
+        "operationId": "linkResults",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/teams": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Teams list",
+        "description": "Web link to the list of teams for the event.\n\nThe link can be shared with anyone and does not require the player to be logged in.  The display is the same as the event teams list print, and the display can be configured in the event print center.\n",
+        "operationId": "linkTeamList",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/events/{eventId}/weblinks/teeSheet": {
+      "get": {
+        "tags": [
+          "Event Web Links"
+        ],
+        "summary": "Tee sheet list",
+        "description": "Web link to the tee sheet for the event.\n\nThe link can be shared with anyone and does not require the player to be logged in.  The display is the same as the event tee sheet print, and the display can be configured in the event print center.\n\n**Multi-Round Events:**\nIf the request includes a multi-round event id, then all rounds that have a tee time assigned will be displayed in the tee sheet.\n",
+        "operationId": "linkTeeSheet",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Event Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M-5208"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiWebUrl"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "url": "https://www.unknowngolf.com/q?ac=ke58tnxn"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/communities/{communityId}": {
+      "post": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Add player to community",
+        "description": "Add the player to the community with the membership status",
+        "operationId": "addToCommunity",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "member",
+            "in": "query",
+            "description": "Community member status (true = member, false = non-member)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiPlayer"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "playerId": 1,
+                      "member": true,
+                      "firstName": "Bill",
+                      "lastName": "Trabosh",
+                      "suffix": "III",
+                      "gender": "M",
+                      "handle": "Founder",
+                      "email": "support@unknowngolf.com",
+                      "dob": "1988-07-14",
+                      "phoneCounryCode": "US",
+                      "phoneNumber": "5555555555",
+                      "hcActive": true,
+                      "hcProviderId": 3,
+                      "hcId": "55885",
+                      "hcIndex": 12.7,
+                      "hcRevisionDt": "2025-08-04"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Remove player from community",
+        "description": "Remove the player from the community, if the player has participated in an event or registered for an upcoming event they cannot be removed from the community",
+        "operationId": "deleteFromCommunity",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Search players",
+        "description": "Search the players in a community",
+        "operationId": "search_7",
+        "requestBody": {
+          "description": "Player search criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiPlayerSearch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiPlayer"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "playerId": 1,
+                        "member": true,
+                        "firstName": "Bill",
+                        "lastName": "Trabosh",
+                        "suffix": "III",
+                        "gender": "M",
+                        "handle": "Founder",
+                        "email": "support@unknowngolf.com",
+                        "dob": "1988-07-14",
+                        "phoneCounryCode": "US",
+                        "phoneNumber": "5555555555",
+                        "hcActive": true,
+                        "hcProviderId": 3,
+                        "hcId": "55885",
+                        "hcIndex": 12.7,
+                        "hcRevisionDt": "2025-08-04"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Create player",
+        "description": "\t\t\tCreate a player and add them to a community, if the player already exists in Unknown Golf then they will just be added to the community\n\n\t\t\t**Note:**\n\t\t\tPlayers must be added to a community, you cannot create a player without adding them to at least one of your communities.\n\n\t\t\tAfter the player is created, if you need to add them to additional communities you can via the \"Player add to community\" operation.\n",
+        "operationId": "create_1",
+        "requestBody": {
+          "description": "Player to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiPlayerAdd"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiPlayer"
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": {
+                      "playerId": 1,
+                      "member": true,
+                      "firstName": "Bill",
+                      "lastName": "Trabosh",
+                      "suffix": "III",
+                      "gender": "M",
+                      "handle": "Founder",
+                      "email": "support@unknowngolf.com",
+                      "dob": "1988-07-14",
+                      "phoneCounryCode": "US",
+                      "phoneNumber": "5555555555",
+                      "hcActive": true,
+                      "hcProviderId": 3,
+                      "hcId": "55885",
+                      "hcIndex": 12.7,
+                      "hcRevisionDt": "2025-08-04"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/communities": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "list player communities",
+        "description": "Get the list of communities for a player. The player can be a member or non-member in that community",
+        "operationId": "listCommunities",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiPlayer"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 2,
+                        "name": "Unknown Golf Club",
+                        "club": true
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/email": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update email",
+        "description": "Update the Player's email address, if the player has already completed their profile on Unknown Golf update the player's email can only be performed by the player on Unknown Golf.",
+        "operationId": "udpateEmail",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Player email address",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/communities/{communityId}/member": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update member status",
+        "description": "Update the Player's member status for the community",
+        "operationId": "udpateMemberStatus",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "member",
+            "in": "query",
+            "description": "Community member status (true = member, false = non-member)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/dob": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update date of birth",
+        "description": "Update the Player's date of birth in the format YYYY-MM-dd, if the player has already completed their profile on Unknown Golf update the player's Date of Birth can only be performed by the player on Unknown Golf.",
+        "operationId": "updateDateOfBirth",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "description": "Player Date of Birth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/handicap": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update handicap id",
+        "description": "Update the Player's world handicap, if the player has already completed their profile on Unknown Golf update the player's world handicap can only be performed by the player on Unknown Golf.",
+        "operationId": "updateHandicapId",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "hcProviderId",
+            "in": "query",
+            "description": "World Handicap Provider Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "hcId",
+            "in": "query",
+            "description": "World Handicap Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/communities/{communityId}/handle": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update handle",
+        "description": "Update the Player's handle (nickname) for a community",
+        "operationId": "updateHandle",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Player handle",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/name": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update name",
+        "description": "Update the Player's name, if the player has already completed their profile on Unknown Golf update the player's name can only be performed by the player on Unknown Golf.",
+        "operationId": "updateName_1",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "firstName",
+            "in": "query",
+            "description": "First name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lasttName",
+            "in": "query",
+            "description": "Last name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "suffix",
+            "in": "query",
+            "description": "Last name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/players/{playerId}/phone": {
+      "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update phone number",
+        "description": "Update the Player's mobile phone, if the player has already completed their profile on Unknown Golf update the player's phone can only be performed by the player on Unknown Golf.",
+        "operationId": "updatePhoneNumber",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "phoneCountryCd",
+            "in": "query",
+            "description": "Phone country code, example (US)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "Phone number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/util/worldHandicaps/providers": {
+      "get": {
+        "tags": [
+          "Utility"
+        ],
+        "summary": "World Handicap Providers",
+        "description": "List of World Handicap providers supported by Unknown Golf",
+        "operationId": "hcProviders",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HandicapProvider"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 3,
+                        "name": "USGA"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    },
+    "/v1/util/leaderboards/types": {
+      "get": {
+        "tags": [
+          "Utility"
+        ],
+        "summary": "List all leaderboard types",
+        "description": "List of leaderboard types\n",
+        "operationId": "list_5",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiLeaderboardType"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "description": "sample",
+                    "value": [
+                      {
+                        "id": 1,
+                        "name": "LOW_NET"
+                      },
+                      {
+                        "id": 2,
+                        "name": "STABLEFORD"
+                      },
+                      {
+                        "id": 3,
+                        "name": "MATCH_PLAY"
+                      },
+                      {
+                        "id": 5,
+                        "name": "SKINS"
+                      },
+                      {
+                        "id": 6,
+                        "name": "WINNER"
+                      },
+                      {
+                        "id": 7,
+                        "name": "ADMIN"
+                      },
+                      {
+                        "id": 8,
+                        "name": "TEAM_BEST_BALL"
+                      },
+                      {
+                        "id": 9,
+                        "name": "TEAM_SCRAMBLE"
+                      },
+                      {
+                        "id": 10,
+                        "name": "HOLE_SCORE"
+                      },
+                      {
+                        "id": 11,
+                        "name": "PICK_A_PRO"
+                      },
+                      {
+                        "id": 12,
+                        "name": "ECLECTIC"
+                      },
+                      {
+                        "id": 13,
+                        "name": "COMBINATION"
+                      },
+                      {
+                        "id": 16,
+                        "name": "MATCH_PLAY_ALL"
+                      },
+                      {
+                        "id": 19,
+                        "name": "BALL_SELECT"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized player or request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Access token",
+            "example": "eyJhbGc4NCJ9.eyJzdWIiOiJ1cC5hcGlAdW5rbm93bmdvbGYyOSwieHAiOjQyMTEyMTQxMDgxfQ.eRDA6Ubn9OgY_5M4u8ENSrPFP5X9X4ZcuM"
+          },
+          "tokenType": {
+            "type": "string",
+            "description": "Token Type",
+            "example": "Bearer"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Number of seconds until the token expires",
+            "format": "int64",
+            "example": 86400
+          },
+          "scope": {
+            "type": "string",
+            "description": "Token Type",
+            "example": "read write"
+          }
+        },
+        "description": "Player access token"
+      },
+      "Credentials": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "support@unknowngolf.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password",
+            "example": "SuPP0r$z"
+          }
+        },
+        "description": "Player security credentials"
+      },
+      "Community": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Community id",
+            "format": "int32",
+            "example": 3
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Bowl of Soup"
+          },
+          "club": {
+            "type": "boolean",
+            "description": "Flag if the community is a club with sub communities",
+            "example": true
+          },
+          "clubCommunityId": {
+            "type": "integer",
+            "description": "The community id of the club this community is associated with",
+            "format": "int32",
+            "example": 24
+          }
+        },
+        "description": "Community which can also be a Club"
+      },
+      "CommunitySearch": {
+        "type": "object",
+        "properties": {
+          "communityIds": {
+            "type": "array",
+            "description": "List of Community Ids",
+            "example": [
+              4,
+              2445,
+              2434
+            ],
+            "items": {
+              "type": "integer",
+              "description": "List of Community Ids",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Community search criteria"
+      },
+      "ApiEvent": {
+        "type": "object",
+        "properties": {
+          "communityId": {
+            "type": "integer",
+            "description": "Community Id",
+            "format": "int32",
+            "example": 19564
+          },
+          "communityName": {
+            "type": "string",
+            "description": "Community Name",
+            "example": "19564"
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Event Id",
+            "example": "M-432"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Member / Member"
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 2434
+          },
+          "courseName": {
+            "type": "string",
+            "description": "Course Name",
+            "example": "2434"
+          },
+          "city": {
+            "type": "string",
+            "description": "City",
+            "example": "Lantana"
+          },
+          "state": {
+            "type": "string",
+            "description": "State",
+            "example": "TX"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start Date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End Date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "info": {
+            "type": "string",
+            "description": "Info",
+            "example": "TX"
+          },
+          "locked": {
+            "type": "boolean",
+            "description": "Locked",
+            "example": true
+          }
+        },
+        "description": "Event criteria"
+      },
+      "ApiEventSearch": {
+        "required": [
+          "communityId"
+        ],
+        "type": "object",
+        "properties": {
+          "communityId": {
+            "type": "integer",
+            "description": "Community Id",
+            "format": "int32",
+            "example": 19564
+          },
+          "forPlayerId": {
+            "type": "integer",
+            "description": "Events viewable for this player",
+            "format": "int32",
+            "example": 287
+          },
+          "forRegisteredPlayer": {
+            "type": "boolean",
+            "description": "Events where this player is (or is NOT) registered (Signed Up) to participate.  True = Events registered, False = Events not registered, null = All events",
+            "example": true
+          },
+          "eventIds": {
+            "type": "array",
+            "description": "List of Event Ids",
+            "example": "[M-4, S-2445, S-2434]",
+            "items": {
+              "type": "string",
+              "description": "List of Event Ids",
+              "example": "[M-4, S-2445, S-2434]"
+            }
+          },
+          "courseIds": {
+            "type": "array",
+            "description": "Course Ids",
+            "example": [
+              4,
+              2445,
+              2434
+            ],
+            "items": {
+              "type": "integer",
+              "description": "Course Ids",
+              "format": "int32"
+            }
+          },
+          "startDateFrom": {
+            "type": "string",
+            "description": "Start Date is on or after this date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "startDateTo": {
+            "type": "string",
+            "description": "Start Date is on or before this date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "endDateFrom": {
+            "type": "string",
+            "description": "End Date is on or after this date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "endDateTo": {
+            "type": "string",
+            "description": "End Date is on or before this date",
+            "format": "date",
+            "example": "2025-01-27"
+          },
+          "sortAsc": {
+            "type": "boolean",
+            "description": "Sort by Date Ascending (Default is Descending)",
+            "example": false
+          },
+          "maxResults": {
+            "type": "integer",
+            "description": "Max number of results",
+            "format": "int32",
+            "example": 100
+          }
+        },
+        "description": "Event search criteria"
+      },
+      "ApiCourse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 287
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Lantana Golf Club"
+          },
+          "city": {
+            "type": "string",
+            "description": "City",
+            "example": "Lantana"
+          },
+          "state": {
+            "type": "string",
+            "description": "State",
+            "example": "US-TX"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country",
+            "example": "US"
+          }
+        },
+        "description": "Golf Course"
+      },
+      "ApiCourseTee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 18547
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender (M - Men / F - Ladies)",
+            "example": "M"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Blue"
+          },
+          "par": {
+            "type": "integer",
+            "description": "Par Total",
+            "format": "int32",
+            "example": 72
+          },
+          "parFront": {
+            "type": "integer",
+            "description": "Par Front",
+            "format": "int32",
+            "example": 36
+          },
+          "parBack": {
+            "type": "integer",
+            "description": "Par Back",
+            "format": "int32",
+            "example": 36
+          },
+          "rating": {
+            "type": "number",
+            "description": "Rating Total",
+            "format": "double",
+            "example": 73.1
+          },
+          "ratingFront": {
+            "type": "number",
+            "description": "Rating Front",
+            "format": "double",
+            "example": 36
+          },
+          "ratingBack": {
+            "type": "number",
+            "description": "Rating Back",
+            "format": "double",
+            "example": 37.1
+          },
+          "slope": {
+            "type": "integer",
+            "description": "Slope Total",
+            "format": "int32",
+            "example": 128
+          },
+          "slopeFront": {
+            "type": "integer",
+            "description": "Slope Front",
+            "format": "int32",
+            "example": 130
+          },
+          "slopeBack": {
+            "type": "integer",
+            "description": "Slope Back",
+            "format": "int32",
+            "example": 126
+          },
+          "holes": {
+            "type": "array",
+            "description": "Holes",
+            "items": {
+              "$ref": "#/components/schemas/ApiCourseTeeHole"
+            }
+          }
+        },
+        "description": "Golf Course Tee"
+      },
+      "ApiCourseTeeHole": {
+        "type": "object",
+        "properties": {
+          "hole": {
+            "type": "integer",
+            "description": "Hole Number",
+            "format": "int32",
+            "example": 1
+          },
+          "par": {
+            "type": "integer",
+            "description": "hole Par",
+            "format": "int32",
+            "example": 4
+          },
+          "hc": {
+            "type": "integer",
+            "description": "Hole Handicap (Stroke Allocation)",
+            "format": "int32",
+            "example": 8
+          },
+          "lengthYards": {
+            "type": "integer",
+            "description": "length in yards",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "description": "Golf Course Tee Hole"
+      },
+      "ApiFlight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Flight Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "leaderboardId": {
+            "type": "integer",
+            "description": "Leaderboard Id",
+            "format": "int32",
+            "example": 28764
+          },
+          "name": {
+            "type": "string",
+            "description": "Flight Name",
+            "example": "Flight #1"
+          }
+        },
+        "description": "Flight"
+      },
+      "ApiFlightPlayer": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 28
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Suffix",
+            "example": "III"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          }
+        },
+        "description": "Flight Player"
+      },
+      "ApiFlightPlayersTeams": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Flight Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "leaderboardId": {
+            "type": "integer",
+            "description": "Leaderboard Id",
+            "format": "int32",
+            "example": 28764
+          },
+          "name": {
+            "type": "string",
+            "description": "Flight Name",
+            "example": "Flight #1"
+          },
+          "players": {
+            "type": "array",
+            "description": "List of Players (If not a Team Leaderboard)",
+            "items": {
+              "$ref": "#/components/schemas/ApiFlightPlayer"
+            }
+          },
+          "teams": {
+            "type": "array",
+            "description": "List of Teams (Only if a Team Leaderboard)",
+            "items": {
+              "$ref": "#/components/schemas/ApiFlightTeam"
+            }
+          }
+        },
+        "description": "Flight with Players and Teams"
+      },
+      "ApiFlightTeam": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 28837
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Team #1"
+          },
+          "players": {
+            "type": "array",
+            "description": "Players",
+            "items": {
+              "$ref": "#/components/schemas/ApiFlightPlayer"
+            }
+          }
+        },
+        "description": "Flight Team"
+      },
+      "ApiPlayerHc": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 15254
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 4585
+          },
+          "courseName": {
+            "type": "string",
+            "description": "Course Name",
+            "example": "Lantana Golf Club"
+          },
+          "teeId": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 6585452
+          },
+          "teeName": {
+            "type": "string",
+            "description": "Tee Name",
+            "example": "Blue"
+          },
+          "teeRating": {
+            "type": "number",
+            "description": "Tee Rating",
+            "format": "double",
+            "example": 73.1
+          },
+          "teeSlope": {
+            "type": "integer",
+            "description": "Tee Slope",
+            "format": "int32",
+            "example": 128
+          },
+          "teePar": {
+            "type": "integer",
+            "description": "Tee Par",
+            "format": "int32",
+            "example": 72
+          },
+          "hcRevisionDt": {
+            "type": "string",
+            "description": "Handicap Revision Date for the Player's index, if a World Handicap was utilized to set the player's handicap",
+            "format": "date",
+            "example": "2025-08-12"
+          },
+          "hcIndex": {
+            "type": "number",
+            "description": "Handicap Index",
+            "format": "double",
+            "example": 7.6
+          },
+          "hcCourse": {
+            "type": "integer",
+            "description": "Handicap Course",
+            "format": "int32",
+            "example": 8
+          },
+          "hcPlaying": {
+            "type": "integer",
+            "description": "Handicap Playing",
+            "format": "int32",
+            "example": 8
+          },
+          "hcAllocPct": {
+            "type": "integer",
+            "description": "Allocation Percentage",
+            "format": "int32",
+            "example": 100
+          },
+          "manualMsg": {
+            "type": "string",
+            "description": "Message explaining the manual set handicap",
+            "example": "MGA Stroke from partner rule"
+          },
+          "lockedDt": {
+            "type": "string",
+            "description": "Date and time in UTC (Coordinated Universal Time) of when the players handicap was locked",
+            "format": "date-time"
+          }
+        },
+        "description": "Player Handicap"
+      },
+      "ApiHcSearch": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 7586
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 526
+          }
+        },
+        "description": "Handicap Search Criteria"
+      },
+      "ApiUpdateHcCoursePlaying": {
+        "required": [
+          "hcCourse",
+          "hcPlaying"
+        ],
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id (All Courses for the Event if not included)",
+            "format": "int32",
+            "example": 7586
+          },
+          "hcCourse": {
+            "type": "integer",
+            "description": "Course Handicap (18 Holes)",
+            "format": "int32",
+            "example": 7
+          },
+          "hcPlaying": {
+            "type": "integer",
+            "description": "Playing Handicap (18 Holes)",
+            "format": "int32",
+            "example": 7
+          },
+          "manualMsg": {
+            "type": "string",
+            "description": "Message explaining the manual setting of the player's handicap.\n\nThis message is viewable to the player when they view how their handicap was calculated for the event / round.\n",
+            "example": "MGA Stroke from partner rule"
+          }
+        },
+        "description": "Handicap Course Playing"
+      },
+      "ApiUpdateHcIndex": {
+        "required": [
+          "hcIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "hcIndex": {
+            "type": "number",
+            "description": "Handicap Index",
+            "format": "double",
+            "example": 5.8
+          },
+          "manualMsg": {
+            "type": "string",
+            "description": "Message explaining the manual setting of the player's handicap.\n\nThis message is viewable to the player when they view how their handicap was calculated for the event / round.\n",
+            "example": "MGA Stroke from partner rule"
+          }
+        },
+        "description": "Handicap Index"
+      },
+      "ApiTeamHc": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 15254
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 4585
+          },
+          "courseName": {
+            "type": "string",
+            "description": "Course Name",
+            "example": "Lantana Golf Club"
+          },
+          "hcIndex": {
+            "type": "number",
+            "description": "Handicap Index",
+            "format": "double",
+            "example": 7.6
+          },
+          "hcCourse": {
+            "type": "integer",
+            "description": "Handicap Course",
+            "format": "int32",
+            "example": 8
+          },
+          "hcPlaying": {
+            "type": "integer",
+            "description": "Handicap Playing",
+            "format": "int32",
+            "example": 8
+          },
+          "hcAllocPct": {
+            "type": "number",
+            "description": "Allocation Percentage",
+            "format": "double",
+            "example": 100
+          },
+          "manualMsg": {
+            "type": "string",
+            "description": "Message explaining the manual set handicap",
+            "example": "MGA Stroke from partner rule"
+          },
+          "lockedDt": {
+            "type": "string",
+            "description": "Date and time in UTC (Coordinated Universal Time) of when the teams handicap was locked",
+            "format": "date-time"
+          }
+        },
+        "description": "Team Handicap"
+      },
+      "ApiUpdateHc": {
+        "required": [
+          "hcCourse",
+          "hcIndex",
+          "hcPlaying"
+        ],
+        "type": "object",
+        "properties": {
+          "hcIndex": {
+            "type": "number",
+            "description": "Handicap Index",
+            "format": "double",
+            "example": 12.3
+          },
+          "hcCourse": {
+            "type": "integer",
+            "description": "Course Handicap (18 Holes)",
+            "format": "int32",
+            "example": 7
+          },
+          "hcPlaying": {
+            "type": "integer",
+            "description": "Playing Handicap (18 Holes)",
+            "format": "int32",
+            "example": 6
+          },
+          "manualMsg": {
+            "type": "string",
+            "description": "Message explaining the manual setting of the team's handicap.\n\nThis message is viewable to the team players when they view how their handicap was calculated for the event / round.\n",
+            "example": "MGA Stroke from partner rule"
+          }
+        },
+        "description": "Update a team handicap"
+      },
+      "ApiLeaderboard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Leaderboard Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "name": {
+            "type": "string",
+            "description": "Leaderboard Name",
+            "example": "Best Ball (1x Net)"
+          },
+          "typeId": {
+            "type": "integer",
+            "description": "Leaderboard Type Id",
+            "format": "int32",
+            "example": 2
+          }
+        },
+        "description": "Leaderboard"
+      },
+      "ApiPlayerId": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 1857
+          }
+        },
+        "description": "Player Id"
+      },
+      "ApiPlayerSignUp": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id\n\n**Note:**\nOnly required when registering a player and their profile, if you are just registering a name only \"First Name, \"Last Name\", and \"Gender\" are required.\n",
+            "format": "int32",
+            "example": 15254
+          },
+          "member": {
+            "type": "boolean",
+            "description": "Member of community",
+            "example": true
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Player first name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Player last name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Player suffix",
+            "example": "III"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender code",
+            "example": "M / F"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          },
+          "affiliation": {
+            "type": "string",
+            "description": "Affiliation",
+            "example": "Lantana Golf Club"
+          },
+          "age": {
+            "type": "integer",
+            "description": "Age",
+            "format": "int32",
+            "example": 56
+          }
+        },
+        "description": "Player to register for an Event"
+      },
+      "ApiPlayer": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 15254
+          },
+          "member": {
+            "type": "boolean",
+            "description": "Member of community",
+            "example": true
+          },
+          "firstName": {
+            "type": "string",
+            "description": "first name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "last name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "suffix",
+            "example": "III"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender code",
+            "example": "M / F"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "support@unknowngolf.com"
+          },
+          "dob": {
+            "type": "string",
+            "description": "Date of Birth",
+            "format": "date",
+            "example": "1987-01-26"
+          },
+          "phoneCountryCd": {
+            "type": "string",
+            "description": "Country Code for the phone number",
+            "example": "US"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "5555555555"
+          },
+          "hcActive": {
+            "type": "boolean",
+            "description": "Flag if the player's world handicap is active",
+            "example": true
+          },
+          "hcProviderId": {
+            "type": "integer",
+            "description": "World Handicap Provider Id, reference the API for World Handicap Providers for the ids",
+            "format": "int32",
+            "example": 3
+          },
+          "hcId": {
+            "type": "string",
+            "description": "World Handicap Id",
+            "example": "6585452"
+          },
+          "hcIndex": {
+            "type": "number",
+            "description": "World Handicap Index",
+            "format": "double",
+            "example": 15.2
+          },
+          "hcRevisionDt": {
+            "type": "string",
+            "description": "Handicap revision date",
+            "format": "date",
+            "example": "2025-04-11"
+          },
+          "picUrl": {
+            "type": "string",
+            "description": "Profile Picture URL",
+            "example": "https://static.unknwongolf.com/example.gif"
+          },
+          "updatesAllowed": {
+            "type": "boolean",
+            "description": "Flag if updates to the player's personal information may be made through the Unknown Golf API\n\n** Note: **\nIf the player has already completed their profile on UnknownGolf.com, updates to the player's personal information listed below can only be performed by the player on Unknown Golf:\n\n- Name (First, Last, Suffix)\n- Email Address\n- World Handicap Id\n- Date of Birth\n- Phone Number\n\nOnly updates are restricted, if the player does not currently have an attribute set then setting that attribute is allowed.  Example, if the player does not have a phone number set, you can set the phone number for them.\n\n",
+            "example": true
+          }
+        },
+        "description": "Player object"
+      },
+      "ApiScore": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Score Id",
+            "format": "int32",
+            "example": 15589645
+          },
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 15254
+          },
+          "name": {
+            "type": "string",
+            "description": "Team name",
+            "example": "Team #1"
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Event Id",
+            "example": "S-432"
+          },
+          "startHole": {
+            "type": "integer",
+            "description": "Starting Hole",
+            "format": "int32",
+            "example": 1
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 4585
+          },
+          "courseName": {
+            "type": "string",
+            "description": "Course Name",
+            "example": "Lantana Golf Club"
+          },
+          "hcIndex": {
+            "type": "number",
+            "description": "Handicap Index",
+            "format": "double",
+            "example": 7.6
+          },
+          "hcCourse": {
+            "type": "integer",
+            "description": "Handicap Course",
+            "format": "int32",
+            "example": 8
+          },
+          "hcPlaying": {
+            "type": "integer",
+            "description": "Handicap Playing",
+            "format": "int32",
+            "example": 8
+          },
+          "gross": {
+            "type": "integer",
+            "description": "Gross Score",
+            "format": "int32",
+            "example": 85
+          },
+          "grossVsPar": {
+            "type": "integer",
+            "description": "Gross Score vs. Par",
+            "format": "int32",
+            "example": 13
+          },
+          "net": {
+            "type": "integer",
+            "description": "Net Score",
+            "format": "int32",
+            "example": 74
+          },
+          "netVsPar": {
+            "type": "integer",
+            "description": "Net Score vs. Par",
+            "format": "int32",
+            "example": 2
+          },
+          "isTest": {
+            "type": "boolean",
+            "description": "Test Score",
+            "example": false
+          },
+          "unofficial": {
+            "type": "boolean",
+            "description": "Unofficial (Live) Score",
+            "example": true
+          },
+          "players": {
+            "type": "array",
+            "description": "Team Players",
+            "items": {
+              "$ref": "#/components/schemas/ApiTeamPlayer"
+            }
+          },
+          "holeScores": {
+            "type": "array",
+            "description": "Hole Scores",
+            "items": {
+              "$ref": "#/components/schemas/ApiScoreHole"
+            }
+          }
+        },
+        "description": "Player Score"
+      },
+      "ApiScoreHole": {
+        "type": "object",
+        "properties": {
+          "hole": {
+            "type": "integer",
+            "description": "Hole Number",
+            "format": "int32",
+            "example": 1
+          },
+          "gross": {
+            "type": "integer",
+            "description": "Gross Score",
+            "format": "int32",
+            "example": 5
+          },
+          "netCourse": {
+            "type": "integer",
+            "description": "Net Score (Course)",
+            "format": "int32",
+            "example": 3
+          },
+          "netPlaying": {
+            "type": "integer",
+            "description": "Net Score (Playing)",
+            "format": "int32",
+            "example": 3
+          }
+        },
+        "description": "Player Hole Score"
+      },
+      "ApiScoreSearch": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 7586
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 526
+          }
+        },
+        "description": "Score Search Criteria"
+      },
+      "ApiTeamPlayer": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 28
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Suffix",
+            "example": "III"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          }
+        },
+        "description": "Team Player"
+      },
+      "ApiTeamAdd": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Team #1"
+          },
+          "playerIds": {
+            "type": "array",
+            "description": "Player Ids to initially assign to the team",
+            "items": {
+              "type": "integer",
+              "description": "Player Ids to initially assign to the team",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Team Add"
+      },
+      "ApiTeamPlayerAdd": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 15567
+          },
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 28
+          }
+        },
+        "description": "Team Player Add"
+      },
+      "ApiTeam": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "integer",
+            "description": "Team Id",
+            "format": "int32",
+            "example": 28837
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "example": "Team #1"
+          },
+          "players": {
+            "type": "array",
+            "description": "Players",
+            "items": {
+              "$ref": "#/components/schemas/ApiTeamPlayer"
+            }
+          }
+        },
+        "description": "Team"
+      },
+      "ApiTeeCreateReturn": {
+        "type": "object",
+        "properties": {
+          "teePairingId": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "errors": {
+            "type": "array",
+            "description": "Errors creating the tee pairing",
+            "example": [
+              "Unable to add player id 159323 to the tee pairing"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Errors creating the tee pairing",
+              "example": "[\"Unable to add player id 159323 to the tee pairing\"]"
+            }
+          }
+        },
+        "description": "List of the tee pairings created and any errors that may have prevented the creation of the tee pairing or adding players to the tee pairing"
+      },
+      "ApiTeeCreate": {
+        "required": [
+          "courseId",
+          "hole",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 21689
+          },
+          "time": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "hole": {
+            "type": "integer",
+            "description": "Starting Hole",
+            "format": "int32",
+            "example": 1
+          },
+          "group": {
+            "type": "string",
+            "description": "Starting Hole Group",
+            "example": "A"
+          },
+          "playerIds": {
+            "type": "array",
+            "description": "Player Ids to assign to the tee pairing",
+            "example": [
+              28,
+              159323,
+              41739
+            ],
+            "items": {
+              "type": "integer",
+              "description": "Player Ids to assign to the tee pairing",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Create tee pairing"
+      },
+      "LocalTime": {
+        "type": "object",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minute": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "second": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nano": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Starting Time in UTC (Coordinated Universal Time)",
+        "example": "08:00 AM"
+      },
+      "ApiTeePlayerAssignReturn": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "errors": {
+            "type": "array",
+            "description": "Errors creating the tee pairing",
+            "example": [
+              "Unable to add player id 159323 to the tee pairing"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Errors creating the tee pairing",
+              "example": "[\"Unable to add player id 159323 to the tee pairing\"]"
+            }
+          }
+        },
+        "description": "List of the players assigned and any errors that may have prevented the assignment"
+      },
+      "ApiTeeAssignPlayer": {
+        "required": [
+          "teePairingId"
+        ],
+        "type": "object",
+        "properties": {
+          "teePairingId": {
+            "type": "integer",
+            "description": "Tee Pairing Id",
+            "format": "int32",
+            "example": 21689
+          },
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 21689
+          }
+        },
+        "description": "Tee pairing player assign"
+      },
+      "ApiTee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 21689
+          },
+          "time": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "hole": {
+            "type": "integer",
+            "description": "Starting Hole",
+            "format": "int32",
+            "example": 1
+          },
+          "group": {
+            "type": "string",
+            "description": "Starting Hole Group",
+            "example": "A"
+          },
+          "players": {
+            "type": "array",
+            "description": "Players",
+            "items": {
+              "$ref": "#/components/schemas/ApiTeePlayer"
+            }
+          }
+        },
+        "description": "Tee pairing"
+      },
+      "ApiTeePlayer": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "integer",
+            "description": "Player Id",
+            "format": "int32",
+            "example": 28
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Suffix",
+            "example": "III"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          }
+        },
+        "description": "Tee pairing player"
+      },
+      "ApiTeeAllRounds": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "Event Id",
+            "example": "S-7643"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 21689
+          },
+          "time": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "hole": {
+            "type": "integer",
+            "description": "Starting Hole",
+            "format": "int32",
+            "example": 1
+          },
+          "group": {
+            "type": "string",
+            "description": "Starting Hole Group",
+            "example": "A"
+          },
+          "players": {
+            "type": "array",
+            "description": "Players",
+            "items": {
+              "$ref": "#/components/schemas/ApiTeePlayer"
+            }
+          }
+        },
+        "description": "Tee Pairing for all rounds of a multi-round event"
+      },
+      "ApiTeeUpdateReturn": {
+        "type": "object",
+        "properties": {
+          "teePairingId": {
+            "type": "integer",
+            "description": "Tee Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "errors": {
+            "type": "array",
+            "description": "Errors updating the tee pairing",
+            "example": [
+              "Unable to add player id 159323 to the tee pairing"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Errors updating the tee pairing",
+              "example": "[\"Unable to add player id 159323 to the tee pairing\"]"
+            }
+          }
+        },
+        "description": "List of tee pairings update status and any errors that may have prevents updating the tee pairing"
+      },
+      "ApiTeeUpdate": {
+        "required": [
+          "hole",
+          "id",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Tee Pairing Id",
+            "format": "int32",
+            "example": 21689
+          },
+          "time": {
+            "$ref": "#/components/schemas/LocalTime"
+          },
+          "hole": {
+            "type": "integer",
+            "description": "Starting Hole",
+            "format": "int32",
+            "example": 1
+          },
+          "group": {
+            "type": "string",
+            "description": "Starting Hole Group",
+            "example": "A"
+          },
+          "courseId": {
+            "type": "integer",
+            "description": "Course Id",
+            "format": "int32",
+            "example": 21689
+          }
+        },
+        "description": "Update tee pairing"
+      },
+      "ApiWebUrl": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "url",
+            "example": "https://www.unknowngolf.com"
+          }
+        },
+        "description": "Web URL Link"
+      },
+      "ApiPlayerAdd": {
+        "required": [
+          "communityId",
+          "email",
+          "firstName",
+          "gender",
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "communityId": {
+            "type": "integer",
+            "description": "Community Id",
+            "format": "int32",
+            "example": 15254
+          },
+          "member": {
+            "type": "boolean",
+            "description": "Member of community",
+            "example": true
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Player first name",
+            "example": "Bill"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Player last name",
+            "example": "Trabosh"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Player suffix",
+            "example": "III"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender code",
+            "example": "M / F"
+          },
+          "handle": {
+            "type": "string",
+            "description": "Handle or nickname",
+            "example": "Founder"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "support@unknowngolf.com"
+          },
+          "dob": {
+            "type": "string",
+            "description": "Date of Birth",
+            "format": "date",
+            "example": "1987-01-26"
+          },
+          "phoneCountryCd": {
+            "type": "string",
+            "description": "Country Code for the phone number",
+            "example": "US"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "5555555555"
+          },
+          "hcProviderId": {
+            "type": "integer",
+            "description": "World Handicap Provider Id, reference the API for World Handicap Providers for the ids",
+            "format": "int32",
+            "example": 3
+          },
+          "hcId": {
+            "type": "string",
+            "description": "World Handicap Id",
+            "example": "6585452"
+          }
+        },
+        "description": "Add Player object"
+      },
+      "ApiPlayerSearch": {
+        "required": [
+          "communityId"
+        ],
+        "type": "object",
+        "properties": {
+          "communityId": {
+            "type": "integer",
+            "description": "Community Id",
+            "format": "int32",
+            "example": 19564
+          },
+          "playerIds": {
+            "type": "array",
+            "description": "List of Player Ids",
+            "example": [
+              4,
+              2445,
+              2434
+            ],
+            "items": {
+              "type": "integer",
+              "description": "List of Player Ids",
+              "format": "int32"
+            }
+          },
+          "email": {
+            "type": "string",
+            "description": "Email Address",
+            "example": "support@unknowngolf.com"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name can be partial but must start with",
+            "example": "Trab"
+          },
+          "member": {
+            "type": "boolean",
+            "description": "Player member status, True for Members, and false for Non-Members",
+            "example": true
+          },
+          "hcProviderId": {
+            "type": "integer",
+            "description": "World Handicap Provider Id, reference the API for World Handicap Providers for the ids",
+            "format": "int32",
+            "example": 3
+          },
+          "hcId": {
+            "type": "string",
+            "description": "Handicap Id",
+            "example": "15.2"
+          }
+        },
+        "description": "Player search criteria"
+      },
+      "HandicapProvider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "World Handicap Provider Id",
+            "format": "int32",
+            "example": 3
+          },
+          "name": {
+            "type": "string",
+            "description": "World Handicap Provider Name",
+            "example": "USGA"
+          }
+        },
+        "description": "World Handicap Provider"
+      },
+      "ApiLeaderboardType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Type Id",
+            "format": "int32",
+            "example": 28857
+          },
+          "name": {
+            "type": "string",
+            "description": "Type Name",
+            "example": "Stroke Play (Individual)"
+          }
+        },
+        "description": "Leaderboard Types"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
