@@ -2,6 +2,10 @@
 
 OpenClaw skill for the official Unknown Golf REST API.
 
+This skill was created by the author for personal use. Please refer to the official Unknown Golf API documentation for details. Use this at your own risk.
+
+Documentation: [Unknown Golf API Docs](https://api-docs.unknowngolf.com/ug-api)
+
 ## Includes
 
 - `SKILL.md` usage guide
